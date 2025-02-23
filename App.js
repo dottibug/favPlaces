@@ -8,14 +8,47 @@ import AddPlace from './screens/AddPlace';
 import PlaceDetails from './screens/PlaceDetails';
 import MapScreen from './screens/MapScreen';
 import { headerStyles } from './styles/baseStyles';
+import { initializeDatabase } from './utils/database';
+import { useEffect, useState, useCallback } from 'react';
+import * as SplashScreen from 'expo-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  // Initialize database
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await initializeDatabase();
+      } catch (error) {
+        console.error('Error initializing database:', error);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(() => {
+    if (appIsReady) {
+      SplashScreen.hide();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
     <>
       <StatusBar style="auto" />
-      <SafeAreaProvider>
+      <SafeAreaProvider onLayout={onLayoutRootView}>
         <NavigationContainer>
           <Stack.Navigator screenOptions={headerStyles}>
             <Stack.Screen name="Places" component={Places} />

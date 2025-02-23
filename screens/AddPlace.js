@@ -6,8 +6,14 @@ import Button from '../components/Button';
 import PhotoSelector from '../components/PhotoSelector';
 import LocationSelector from '../components/LocationSelector';
 import { useRoute } from '@react-navigation/native';
+import getAddress from '../utils/getAddress';
+import showAlert from '../utils/showAlert';
+import Place from '../models/Place';
+import { savePlace } from '../utils/database';
+import { useNavigation } from '@react-navigation/native';
 
 export default function AddPlace() {
+  const navigation = useNavigation();
   const [location, setLocation] = useState(null);
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
@@ -24,17 +30,39 @@ export default function AddPlace() {
   const handleImage = (image) => setImage(image);
   const handleLocation = (location) => setLocation(location);
 
-  const handleAddPlace = () => {
-    console.log('add place');
-    console.log(`title: ${title}`);
-    console.log(`image: ${image}`);
-    console.log(`location: ${JSON.stringify(location)}`);
+  function handleFormError() {
+    if (!title) showAlert({ title: 'Error', message: 'Please enter a title.' });
+    else if (!image) showAlert({ title: 'Error', message: 'Please take a photo.' });
+    else showAlert({ title: 'Error', message: 'Please pick a location on the map.' });
+  }
 
-    // get readable address
-    // create a Place object
-    // save it to device storage
-    // navigate back to the places screen
-  };
+  async function handleAddPlace() {
+    if (!title || !image || !location) {
+      handleFormError();
+      return;
+    }
+
+    try {
+      const address = await getAddress({ location });
+
+      const place = new Place(
+        title,
+        image,
+        address,
+        location.latitude,
+        location.longitude
+      );
+
+      await savePlace(place);
+      navigation.popToTop();
+    } catch (error) {
+      console.error(error);
+      showAlert({
+        title: 'Error',
+        message: 'Could not save place. Please try again later.',
+      });
+    }
+  }
 
   const tempFinalButtonWrapperStyle = {
     marginBottom: 12,

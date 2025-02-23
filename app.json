@@ -8,9 +8,9 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/location_icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#463F3A"
     },
     "ios": {
       "supportsTablet": true
@@ -37,7 +37,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow the app to use your location."
         }
-      ]
+      ],
+      "expo-sqlite"
     ]
   }
 }

@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable } from 'react-native';
-import { placeItemStyles } from '../../styles/placeItemStyles';
+import { placeListStyles } from '../../styles/placeListStyles';
 import { pressedStyle } from '../../styles/baseStyles';
 
 export default function PlaceItem({ place, onPress }) {
@@ -8,13 +8,13 @@ export default function PlaceItem({ place, onPress }) {
       onPress={onPress}
       style={({ pressed }) =>
         pressed
-          ? [placeItemStyles.placeItemWrapper, pressedStyle]
-          : placeItemStyles.placeItemWrapper
+          ? [placeListStyles.placeItemWrapper, pressedStyle]
+          : placeListStyles.placeItemWrapper
       }>
-      <Image source={{ uri: place.imageUri }} style={placeItemStyles.placeItemImage} />
-      <View style={placeItemStyles.placeItemInfoWrapper}>
-        <Text style={placeItemStyles.placeItemTitle}>{place.title}</Text>
-        <Text style={placeItemStyles.placeItemAddress}>{place.address}</Text>
+      <Image source={{ uri: place.imageUri }} style={placeListStyles.placeItemImage} />
+      <View style={placeListStyles.placeItemInfoWrapper}>
+        <Text style={placeListStyles.placeItemTitle}>{place.title}</Text>
+        <Text style={placeListStyles.placeItemAddress}>{place.address}</Text>
       </View>
     </Pressable>
   );
